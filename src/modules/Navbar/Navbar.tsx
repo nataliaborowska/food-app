@@ -12,6 +12,9 @@ export const Navbar: React.FC = (props) => (
           <li className="nav-item">
             <Link className="nav-link" to='/dishes'>Dishes</Link>
           </li>
+          <li className="nav-item">
+            <Link className="nav-link" to='/drinks'>Drinks</Link>
+          </li>
         </ul>
       </div>
     </div>
