@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders App component 1`] = `
+<BrowserRouter>
+  <div
+    className="container"
+  >
+    <Navbar />
+    <ErrorBoundary>
+      <Route
+        component={[Function]}
+        exact={true}
+        path="/"
+      />
+    </ErrorBoundary>
+    <ErrorBoundary>
+      <Route
+        component={[Function]}
+        exact={true}
+        path="/dishes"
+      />
+    </ErrorBoundary>
+    <ErrorBoundary>
+      <Route
+        component={[Function]}
+        exact={true}
+        path="/drinks"
+      />
+    </ErrorBoundary>
+  </div>
+</BrowserRouter>
+`;

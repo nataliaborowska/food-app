@@ -5,12 +5,22 @@ import {DishList} from './DishList';
 
 export const Dishes: React.FC = () => {
   const [dishes, setDishes] = useState([]);
+  const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
     axios.get('http://localhost:5000/dishes')
       .then(response => setDishes(response.data))
       .catch(error => {console.log(error)})
-  });
+      .finally(() => {
+        setFetching(false)
+      })
+  }, []);
+
+  if (fetching) {
+    return (
+      <span>Loading ...</span>
+    )
+  }
 
   return (
     <div>

@@ -7,7 +7,6 @@ import {Dishes} from './modules/Dishes';
 import {Drinks} from './modules/Drinks';
 import {ErrorBoundary} from './common/ErrorBoundary';
 import {Home} from './modules/Home';
-import styles from './App.module.scss';
 
 const App: React.SFC = () => {
   return (
