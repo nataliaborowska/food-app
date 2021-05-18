@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 
-import {DishList} from './DishList';
+import {DishList} from './components/DishList';
+import {DishesNavbar} from './components/DishesNavbar';
 
 export const Dishes: React.FC = () => {
   const [dishes, setDishes] = useState([]);
@@ -18,12 +19,14 @@ export const Dishes: React.FC = () => {
 
   if (fetching) {
     return (
-      <span>Loading ...</span>
+      <span className="dishes__loading">Loading ...</span>
     )
   }
 
   return (
     <div>
+      <DishesNavbar />
+
       <table className="table">
         <thead>
           <tr>

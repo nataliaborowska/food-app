@@ -1,13 +1,14 @@
 import {mount, shallow} from 'Enzyme';
 import axios from 'axios';
 import {act} from 'react-dom/test-utils';
+import {BrowserRouter} from 'react-router-dom';
 
 import {Dishes} from './Dishes';
-import {DishList} from './DishList';
+import {DishList} from './components/DishList';
 
 describe('testing Dishes', () => {
   it('check if dishes render correctly', () => {
-    const wrapper = shallow(<Dishes />);
+    const wrapper = shallow(<BrowserRouter><Dishes /></BrowserRouter>);
 
     expect(wrapper).toMatchSnapshot();
   });
@@ -33,15 +34,15 @@ describe('test loading dishes', () => {
   afterEach(() => jest.clearAllMocks());
 
   it('renders with loading', () => {
-    wrapper = shallow(<Dishes />);
+    wrapper = shallow(<BrowserRouter><Dishes /></BrowserRouter>);
 
-    expect(wrapper.find('span').first().text()).toBe('Loading ...');
+    expect(wrapper.dive().dive().dive().dive().find('.dishes__loading').text()).toBe('Loading ...');
   });
 
   it('loads dishes', async () => {
     await act(async () => {
       await axios.get.mockImplementationOnce(() => Promise.resolve(data))
-      wrapper = mount(<Dishes />)
+      wrapper = mount(<BrowserRouter><Dishes /></BrowserRouter>)
     });
 
     wrapper.update();

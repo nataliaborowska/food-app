@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`testing Dishes check if dishes render correctly 1`] = `
+exports[`testing DishAdd renders properly 1`] = `
 <Router
   history={
     Object {
@@ -23,6 +23,6 @@ exports[`testing Dishes check if dishes render correctly 1`] = `
     }
   }
 >
-  <Dishes />
+  <DishAdd />
 </Router>
 `;

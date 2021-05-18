@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import {Navbar} from './modules/Navbar';
 import {Dishes} from './modules/Dishes';
+import {DishAdd} from './modules/Dishes/components/DishAdd';
 import {Drinks} from './modules/Drinks';
 import {ErrorBoundary} from './common/ErrorBoundary';
 import {Home} from './modules/Home';
@@ -15,6 +16,7 @@ const App: React.SFC = () => {
         <Navbar />
         <ErrorBoundary><Route path="/" exact component={Home} /></ErrorBoundary>
         <ErrorBoundary><Route path="/dishes" exact component={Dishes} /></ErrorBoundary>
+        <ErrorBoundary><Route path="/dishes/add" component={DishAdd} /></ErrorBoundary>
         <ErrorBoundary><Route path="/drinks" exact component={Drinks} /></ErrorBoundary>
       </div>
     </Router>

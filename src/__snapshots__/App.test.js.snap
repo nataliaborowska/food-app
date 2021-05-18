@@ -23,6 +23,12 @@ exports[`renders App component 1`] = `
     <ErrorBoundary>
       <Route
         component={[Function]}
+        path="/dishes/add"
+      />
+    </ErrorBoundary>
+    <ErrorBoundary>
+      <Route
+        component={[Function]}
         exact={true}
         path="/drinks"
       />
