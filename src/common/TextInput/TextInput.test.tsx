@@ -1,7 +1,8 @@
-import {shallow} from 'enzyme';
+import React, {ChangeEvent} from 'react';
+import {shallow, ShallowWrapper} from 'enzyme';
 
 import {findByTestAttribute} from '../../utils/testUtils';
-import {TextInput} from './TextInput';
+import {TextInput, IPropTypes} from './TextInput';
 
 describe('renders TextInput', () => {
   const wrapper = shallow(<TextInput />);
@@ -13,14 +14,22 @@ describe('renders TextInput', () => {
 });
 
 describe('renders correctly with props passed', () => {
-  it('renders with passed props', () => {
-    const textInputProps = {
+  let mockOnChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  let textInputProps: IPropTypes;
+  let wrapper: ShallowWrapper<typeof TextInput>;;
+  beforeEach(() => {
+    mockOnChange = jest.fn();
+    textInputProps = {
       inputId: 'testID',
       isReset: true,
       label: 'testLabel',
+      value: '',
+      onChange: mockOnChange,
     }
-    const wrapper = shallow(<TextInput {...textInputProps} />);
+    wrapper = shallow(<TextInput {...textInputProps} />);
+  });
 
+  it('renders with passed props', () => {
     const textInputLabel = findByTestAttribute(wrapper, 'textInputLabel');
     const textInputField = findByTestAttribute(wrapper, 'textInputField');
 
@@ -32,24 +41,10 @@ describe('renders correctly with props passed', () => {
   });
 
   it('changes value when typing to input field', () => {
-    const textInputProps = {
-      inputId: 'testID',
-      isReset: false,
-      label: 'testLabel',
-    }
-    const wrapper = shallow(<TextInput {...textInputProps} />);
-
     const textInputField = findByTestAttribute(wrapper, 'textInputField');
 
-    textInputField.at(0).simulate('change', {
-      target: {
-        name: 'testID',
-        value: 'test'
-      }
-    });
+    textInputField.at(0).simulate('change');
 
-    const textInputFieldUpdated = findByTestAttribute(wrapper, 'textInputField');
-
-    expect(textInputFieldUpdated.props().value).toEqual('test');
+    expect(mockOnChange).toHaveBeenCalled();
   });
 });

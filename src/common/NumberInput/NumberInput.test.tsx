@@ -1,9 +1,10 @@
-import {shallow} from 'enzyme';
+import React, {ChangeEvent} from 'react';
+import {shallow, ShallowWrapper} from 'enzyme';
 
 import {findByTestAttribute} from '../../utils/testUtils';
-import {NumberInput} from './NumberInput';
+import {NumberInput, IPropTypes} from './NumberInput';
 
-describe('renders NumberInput', () => {
+describe('renders TextInput', () => {
   const wrapper = shallow(<NumberInput />);
   it('renders without error', () => {
     const numberInputComponent = findByTestAttribute(wrapper, 'numberInput');
@@ -13,14 +14,22 @@ describe('renders NumberInput', () => {
 });
 
 describe('renders correctly with props passed', () => {
-  it('renders with passed props', () => {
-    const numberInputProps = {
+  let mockOnChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  let numberInputProps: IPropTypes;
+  let wrapper: ShallowWrapper<typeof NumberInput>;;
+  beforeEach(() => {
+    mockOnChange = jest.fn();
+    numberInputProps = {
       inputId: 'testID',
       isReset: true,
       label: 'testLabel',
+      value: '',
+      onChange: mockOnChange,
     }
-    const wrapper = shallow(<NumberInput {...numberInputProps} />);
+    wrapper = shallow(<NumberInput {...numberInputProps} />);
+  });
 
+  it('renders with passed props', () => {
     const numberInputLabel = findByTestAttribute(wrapper, 'numberInputLabel');
     const numberInputField = findByTestAttribute(wrapper, 'numberInputField');
 
@@ -32,24 +41,10 @@ describe('renders correctly with props passed', () => {
   });
 
   it('changes value when typing to input field', () => {
-    const numberInputProps = {
-      inputId: 'testID',
-      isReset: false,
-      label: 'testLabel',
-    }
-    const wrapper = shallow(<NumberInput {...numberInputProps} />);
-
     const numberInputField = findByTestAttribute(wrapper, 'numberInputField');
 
-    numberInputField.at(0).simulate('change', {
-      target: {
-        name: 'testID',
-        value: '2'
-      }
-    });
+    numberInputField.at(0).simulate('change');
 
-    const numberInputFieldUpdated = findByTestAttribute(wrapper, 'numberInputField');
-
-    expect(numberInputFieldUpdated.props().value).toEqual('2');
+    expect(mockOnChange).toHaveBeenCalled();
   });
 });
