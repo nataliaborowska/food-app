@@ -1,0 +1,1 @@
+export const dishTypes = ['vegetarian', 'vegan', 'meat', 'gluten free', 'diary free'];

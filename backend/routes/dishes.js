@@ -11,12 +11,14 @@ router.route('/add').post((req, res) => {
   const name = req.body.name;
   const description = req.body.description;
   const size = Number(req.body.size);
+  const type = req.body.type;
   const price = Number(req.body.price);
 
   const newDish = new Dish({
     name,
     description,
     size,
+    type,
     price,
   });
 
@@ -43,6 +45,7 @@ router.route('/update/:id').post((req, res) => {
       dish.name = req.body.name;
       dish.description = req.body.description;
       dish.size = Number(req.body.size);
+      dish.type = req.body.type;
       dish.price = Number(req.body.price);
 
       dish.save()

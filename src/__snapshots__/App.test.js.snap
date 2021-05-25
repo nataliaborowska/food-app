@@ -22,8 +22,8 @@ exports[`renders App component 1`] = `
     </ErrorBoundary>
     <ErrorBoundary>
       <Route
-        component={[Function]}
         path="/dishes/add"
+        render={[Function]}
       />
     </ErrorBoundary>
     <ErrorBoundary>

@@ -13,15 +13,18 @@ export const addDish: ActionCreator<ThunkAction<void, IState, null, DishActions>
       type: DishActionTypesEnum.ADD_DISH_START,
     });
 
-    axios.post('http://localhost:5000/dishes/add', dish)
+    return axios.post('http://localhost:5000/dishes/add', dish)
       .then(response => {
-        console.log(response.data);
         dispatch({
           type: DishActionTypesEnum.ADD_DISH_SUCCESS,
           payload: response.data,
         });
       })
-      .catch(error => {console.warn(error)})
+      .catch(error => {
+        dispatch({
+          type: DishActionTypesEnum.ADD_DISH_FAIL,
+        })
+      })
       .finally(() => dispatch({
         type: DishActionTypesEnum.ADD_DISH_END,
       }));

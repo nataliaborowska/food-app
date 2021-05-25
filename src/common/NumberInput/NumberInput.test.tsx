@@ -21,7 +21,6 @@ describe('renders correctly with props passed', () => {
     mockOnChange = jest.fn();
     numberInputProps = {
       inputId: 'testID',
-      isReset: true,
       label: 'testLabel',
       value: '',
       onChange: mockOnChange,

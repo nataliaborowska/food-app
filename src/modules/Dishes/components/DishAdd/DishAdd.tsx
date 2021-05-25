@@ -1,4 +1,4 @@
-import React, {useEffect, useState, Dispatch} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {ThunkDispatch} from 'redux-thunk';
 
@@ -10,17 +10,25 @@ import {IDish} from '../../../../store/reducers/dishesReducer';
 import {addDish} from '../../../../store/actions/index';
 import {IState} from '../../../../store/store';
 import {DishActions} from '../../../../store/actions/actionTypes';
+import {Select} from '../../../../common/Select';
+import {statusEnum} from '../../../../utils/statusEnum';
 
-export const DishAdd: React.FC = () => {
+interface IPropTypes {
+  dishTypes: Array<string>;
+}
+
+export const DishAdd: React.FC<IPropTypes> = (props) => {
   const dispatch = useDispatch<ThunkDispatch<IState, any, DishActions>>();
   
   const loading = useSelector((state: IState) => state.dishes.loading);
+  const status = useSelector((state: IState) => state.dishes.creationStatus);
 
   const [dish, setDish] = useState<IDish>({
     name: '',
     description: '',
     size: '',
     price: '',
+    type: '',
   });
 
   useEffect(() => {
@@ -30,11 +38,12 @@ export const DishAdd: React.FC = () => {
         description: '',
         size: '',
         price: '',
+        type: '',
       });
     }
-  }, [loading])
+  }, [loading]);
 
-  const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setDish(state => {
       return {
         ...state,
@@ -47,24 +56,6 @@ export const DishAdd: React.FC = () => {
     e.preventDefault();
 
     dispatch(addDish(dish));
-
-
-
-    // axios.post('http://localhost:5000/dishes/add', newDish)
-    //   .then(response => {
-    //     console.log(response.data);
-
-    //     setDish({
-    //       dishName: '',
-    //       dishDescription: '',
-    //       dishSize: '',
-    //       dishPrice: '',
-    //     });
-    //   })
-    //   .catch(error => {console.warn(error)})
-    //   .finally(() => {
-    //     setIsLoading(false);
-    //   });
   }
 
   return (
@@ -72,6 +63,18 @@ export const DishAdd: React.FC = () => {
       <DishesNavbar />
 
       <h1>Add new Dish</h1>
+
+      {status === statusEnum.SUCCESS &&
+        <div data-test="dishAddSuccess" className="alert alert-success" role="alert">
+          <span>You have successfully created a new dish {dish.name}.</span>
+        </div>
+      }
+
+      {status === statusEnum.FAIL &&
+        <div data-test="dishAddFail" className="alert alert-danger" role="alert">
+          <span>Sorry, there was a problem processing your request</span>
+        </div>
+      }
 
       {loading ?
         <Loader />
@@ -88,6 +91,13 @@ export const DishAdd: React.FC = () => {
             label="Description"
             onChange={handleFieldChange}
             value={dish.description}
+          />
+          <Select
+            label="Type"
+            onChange={handleFieldChange}
+            selectId="type"
+            values={props.dishTypes}
+            value={dish.type}
           />
           <NumberInput
             inputId="size"

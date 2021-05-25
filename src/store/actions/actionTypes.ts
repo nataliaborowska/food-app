@@ -10,6 +10,10 @@ export interface IAddDishEnd {
   type: DishActionTypesEnum.ADD_DISH_END;
 }
 
+export interface IAddDishFail {
+  type: DishActionTypesEnum.ADD_DISH_FAIL;
+}
+
 export interface IAddDishStart {
   type: DishActionTypesEnum.ADD_DISH_START;
 }
@@ -17,4 +21,5 @@ export interface IAddDishStart {
 export type DishActions = 
 | IAddDishSuccess
 | IAddDishEnd
+| IAddDishFail
 | IAddDishStart;
