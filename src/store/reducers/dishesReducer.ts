@@ -8,18 +8,21 @@ export interface IDish {
   size: string;
   price: string;
   type: string;
+  _id?: string;
 }
 
 export interface IDishesState {
   dishes: Array<IDish>;
   loading: boolean;
   creationStatus: statusEnum;
+  fetchingStatus: statusEnum;
 }
 
 const initialState: IDishesState = {
   dishes: [],
   loading: false,
   creationStatus: statusEnum.PENDING,
+  fetchingStatus: statusEnum.PENDING,
 }
 
 export const dishesReducer = (state: IDishesState = initialState, action: DishActions): IDishesState => {
@@ -44,6 +47,28 @@ export const dishesReducer = (state: IDishesState = initialState, action: DishAc
       return {
         ...state,
         creationStatus: statusEnum.PENDING,
+        loading: true,
+      }
+    case DishActionTypesEnum.GET_DISHES_SUCCESS:
+      return {
+        ...state,
+        fetchingStatus: statusEnum.SUCCESS,
+        dishes: action.payload,
+      }
+    case DishActionTypesEnum.GET_DISHES_END:
+      return {
+        ...state,
+        loading: false,
+      }
+    case DishActionTypesEnum.GET_DISHES_FAIL:
+      return {
+        ...state,
+        fetchingStatus: statusEnum.FAIL,
+      }
+    case DishActionTypesEnum.GET_DISHES_START:
+      return {
+        ...state,
+        fetchingStatus: statusEnum.PENDING,
         loading: true,
       }
   }

@@ -1,15 +1,10 @@
 import React from 'react';
 
 import {Dish} from './Dish';
+import {IDish} from '../../../../store/reducers/dishesReducer';
 
 interface IPropTypes {
-  dishes: Array<{
-    name: string;
-    description: string;
-    size: number;
-    price: number;
-    _id: string;
-  }>;
+  dishes: Array<IDish>;
 }
 
 export const DishList: React.FC<IPropTypes> = (props) => (
@@ -20,6 +15,7 @@ export const DishList: React.FC<IPropTypes> = (props) => (
         name={dish.name}
         description={dish.description}
         size={dish.size}
+        type={dish.type}
         price={dish.price}
       />
     ))}

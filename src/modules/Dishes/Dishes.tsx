@@ -1,52 +1,61 @@
-import React, {useEffect, useState} from 'react';
-import axios from 'axios';
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {ThunkDispatch} from 'redux-thunk';
 
 import {DishList} from './components/DishList';
 import {DishesNavbar} from './components/DishesNavbar';
+import {Loader} from '../../common/Loader';
+import {IState} from '../../store/store';
+import {DishActions} from '../../store/actions/actionTypes';
+import {getDishes} from '../../store/actions';
+import {statusEnum} from '../../utils/statusEnum';
 
 export const Dishes: React.FC = () => {
-  const [dishes, setDishes] = useState([]);
-  const [fetching, setFetching] = useState(true);
+  const dispatch = useDispatch<ThunkDispatch<IState, any, DishActions>>();
+  const dishes = useSelector((state: IState) => state.dishes.dishes);
+  const status = useSelector((state: IState) => state.dishes.fetchingStatus);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/dishes')
-      .then(response => setDishes(response.data))
-      .catch(error => {console.log(error)})
-      .finally(() => {
-        setFetching(false)
-      })
+    dispatch(getDishes());
   }, []);
 
-  if (fetching) {
-    return (
-      <span className="dishes__loading">Loading ...</span>
-    )
-  }
-
   return (
-    <div>
+    <div data-test="dishes">
       <DishesNavbar />
+      
+      {status === statusEnum.FAIL &&
+        <div data-test="dishListError" className="alert alert-danger" role="alert">
+          <span>Sorry, there was a problem processing your request</span>
+        </div>
+      }
 
-      <table className="table">
-        <thead>
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Description</th>
-            <th scope="col">Size</th>
-            <th scope="col">Price</th>
-          </tr>
-        </thead>
+      {status === statusEnum.PENDING &&
+        <Loader />
+      }
 
-        {dishes ?
-          <DishList dishes={dishes} />
-          :
-          <tbody>
+      {status === statusEnum.SUCCESS &&
+        <table className="table" data-test="dishesTable">
+          <thead>
             <tr>
-              <td>Sorry, no dishes found</td>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
+              <th scope="col">Size</th>
+              <th scope="col">Type</th>
+              <th scope="col">Price</th>
             </tr>
-          </tbody>
-        }
-      </table>
+          </thead>
+
+          {dishes ?
+            <DishList dishes={dishes} />
+            :
+            <tbody>
+              <tr>
+                <td>Sorry, no dishes found</td>
+              </tr>
+            </tbody>
+          }
+        </table>
+      }
     </div>
   )
 }

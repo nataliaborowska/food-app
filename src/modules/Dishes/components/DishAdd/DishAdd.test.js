@@ -224,7 +224,6 @@ describe('testing form submission async request', () => {
 
       request.respondWith({
         status: 400,
-        response: 'Sorry, there was an error',
       })
     });
 

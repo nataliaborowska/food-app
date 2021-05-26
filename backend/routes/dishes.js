@@ -44,9 +44,9 @@ router.route('/update/:id').post((req, res) => {
     .then((dish) => {
       dish.name = req.body.name;
       dish.description = req.body.description;
-      dish.size = Number(req.body.size);
+      dish.size = req.body.size;
       dish.type = req.body.type;
-      dish.price = Number(req.body.price);
+      dish.price = req.body.price;
 
       dish.save()
         .then(() => res.json('Dish updated'))

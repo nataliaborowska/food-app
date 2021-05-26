@@ -1,56 +1,123 @@
 import {mount, shallow} from 'Enzyme';
 import axios from 'axios';
+import moxios from 'moxios';
 import {act} from 'react-dom/test-utils';
 import {BrowserRouter} from 'react-router-dom';
+import {Provider} from 'react-redux';
 
 import {Dishes} from './Dishes';
 import {DishList} from './components/DishList';
+import {findByTestAttribute} from '../../utils/testUtils';
+import {storeFactory} from '../../utils/testUtils';
+import {getDishes} from '../../store/actions';
 
 describe('testing Dishes', () => {
-  it('check if dishes render correctly', () => {
-    const wrapper = shallow(<BrowserRouter><Dishes /></BrowserRouter>);
+  let wrapper;
+  let store;
 
-    expect(wrapper).toMatchSnapshot();
+  beforeEach(() => {
+    store = storeFactory({});
+    wrapper = mount(
+      <Provider store={store}>
+        <BrowserRouter>
+          <Dishes />
+        </BrowserRouter>
+      </Provider>
+    );
+  });
+
+  it('check if dishes render correctly', () => {
+    const dishes = findByTestAttribute(wrapper, 'dishes');
+
+    expect(dishes.length).toBe(1);
+  });
+  
+  it('initially renders with loader', () => {
+    expect(wrapper.find('Loader').length).toBe(1);
   });
 });
 
-jest.mock('axios');
-
-const dishesArray = [{
-  name: 'test',
-  description: 'test',
-  size: 2,
-  price: 2,
-  _id: 'test',
-}];
-
-const data = {
-  data: dishesArray,
-};
-
-describe('test loading dishes', () => {
+describe('testing async request on page load', () => {
   let wrapper;
+  let store;
+  let dishList;
 
-  afterEach(() => jest.clearAllMocks());
+  beforeEach(() => {
+    store = storeFactory({});
+    wrapper = mount(
+      <Provider store={store}>
+        <BrowserRouter>
+          <Dishes />
+        </BrowserRouter>
+      </Provider>
+    );
 
-  it('renders with loading', () => {
-    wrapper = shallow(<BrowserRouter><Dishes /></BrowserRouter>);
+    moxios.install();
 
-    expect(wrapper.dive().dive().dive().dive().find('.dishes__loading').text()).toBe('Loading ...');
+    dishList = [
+      {
+        name: 'testName',
+        description: 'testDescription',
+        size: '2',
+        type: 'vegan',
+        price: '100',
+      },
+      {
+        name: 'testName2',
+        description: 'testDescription2',
+        size: '3',
+        type: 'vegetarian',
+        price: '150',
+      },
+    ]
   });
 
-  it('loads dishes', async () => {
-    await act(async () => {
-      await axios.get.mockImplementationOnce(() => Promise.resolve(data))
-      wrapper = mount(<BrowserRouter><Dishes /></BrowserRouter>)
+  afterEach(() => {
+    moxios.uninstall();
+  });
+
+  it('updates form list correctly after successful request after first render', () => {
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+
+      request.respondWith({
+        statue: 200,
+        response: dishList,
+      });
     });
 
-    wrapper.update();
+    return store.dispatch(getDishes())
+    .then(() => {
+      const {dishes} = store.getState().dishes;
 
-    await expect(axios.get).toHaveBeenCalledWith('http://localhost:5000/dishes');
+       expect(dishes).toEqual(dishList);
 
-    await expect(axios.get).toHaveBeenCalledTimes(1);
+       wrapper.update();
 
-    await expect(wrapper.find(DishList).props().dishes.sort()).toEqual(dishesArray.sort())
-  })
-})
+       const dishesTable = findByTestAttribute(wrapper, 'dishesTable');
+
+       expect(dishesTable.length).toBe(1);
+
+       expect(DishList.length).toBe(1);
+    });
+  });
+
+  it('updates form list correctly after unsuccessful request after first render', () => {
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+
+      request.respondWith({
+        status: 400,
+      });
+    });
+
+    return store.dispatch(getDishes())
+    .then(() => {
+       wrapper.update();
+
+       const dishListError = findByTestAttribute(wrapper, 'dishListError');
+
+       expect(dishListError.length).toBe(1);
+    });
+  });
+});

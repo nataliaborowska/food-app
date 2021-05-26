@@ -1,6 +1,7 @@
 import {shallow} from 'enzyme';
 
 import {Dish} from './Dish';
+import {findByTestAttribute} from '../../../../../utils/testUtils';
 
 describe('testing dish', () => {
   const dishes = {
@@ -13,7 +14,8 @@ describe('testing dish', () => {
 
   it('renders properly', () => {
     const wrapper = shallow(<Dish dishes={dishes} />);
+    const dish = findByTestAttribute(wrapper, 'dish');
 
-    expect(wrapper).toMatchSnapshot();
+    expect(dish.length).toBe(1);
   });
 });

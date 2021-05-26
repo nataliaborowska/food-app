@@ -17,6 +17,7 @@ describe('testing DishList component', () => {
     description: 'test',
     size: 2,
     price: 2,
+    type: 'vegan',
     _id: 'test',
   }];
 

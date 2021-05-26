@@ -18,8 +18,29 @@ export interface IAddDishStart {
   type: DishActionTypesEnum.ADD_DISH_START;
 }
 
+export interface IGetDishesSuccess {
+  type: DishActionTypesEnum.GET_DISHES_SUCCESS;
+  payload: Array<IDish>;
+}
+
+export interface IGetDishesEnd {
+  type: DishActionTypesEnum.GET_DISHES_END;
+}
+
+export interface IGetDishesFail {
+  type: DishActionTypesEnum.GET_DISHES_FAIL;
+}
+
+export interface IGetDishesStart {
+  type: DishActionTypesEnum.GET_DISHES_START;
+}
+
 export type DishActions = 
 | IAddDishSuccess
 | IAddDishEnd
 | IAddDishFail
-| IAddDishStart;
+| IAddDishStart
+| IGetDishesSuccess
+| IGetDishesEnd
+| IGetDishesFail
+| IGetDishesStart;

@@ -30,3 +30,27 @@ export const addDish: ActionCreator<ThunkAction<void, IState, null, DishActions>
       }));
   }
 }
+
+export const getDishes: ActionCreator<ThunkAction<void, IState, null, DishActions>> = () => {
+  return (dispatch: Dispatch) => {
+    dispatch({
+      type: DishActionTypesEnum.GET_DISHES_START,
+    });
+
+    return axios.get('http://localhost:5000/dishes')
+      .then(response => {
+        dispatch({
+          type: DishActionTypesEnum.GET_DISHES_SUCCESS,
+          payload: response.data,
+        });
+      })
+      .catch(error => {
+        dispatch({
+          type: DishActionTypesEnum.GET_DISHES_FAIL,
+        })
+      })
+      .finally(() => dispatch({
+        type: DishActionTypesEnum.GET_DISHES_END,
+      }));
+  }
+}

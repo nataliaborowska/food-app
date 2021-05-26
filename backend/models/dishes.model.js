@@ -5,8 +5,8 @@ const Schema = mongoose.Schema;
 const dishSchema = new Schema({
   name: {type: String, required: true},
   description: {type: String, required: true},
-  size: {type: Number, required: true},
-  price: {type: Number, required: true},
+  size: {type: String, required: true},
+  price: {type: String, required: true},
   type: {type: String, required: true},
 }, {
   timestamps: true,
